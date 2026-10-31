@@ -23,6 +23,21 @@ If every listed change is intended, accept them with `Tools/autoswitch/check.sh 
 
 ---
 
+## 56. A tone mark never lands on a consonant
+
+**Status:** Fixed 2026-10-31. Rules D10 (4 cases, spelling check off).
+
+**Problem.** With spelling check off (still a setting, decision 10), a tone could land on a consonant: `qupx` put it on q, `dqupx` and ` idigix` on d. The d row of the Unicode table has two entries (Đ đ), so `getCharacterCode` read past it (heap overflow under ASan); on other consonants the app sent U+0000 and garbage. On iOS and Android the touch model reaches it too (`dupx` gives the candidate `dqupx`). Causes: with "gi"/"qu" as the only vowel, `findAndCalculateVowel` leaves `vowelCount` 0 and `VSI` on the first letter, and `handleOldMark` only knew "gi"; rule 3.1 of `handleModernMark` tested `TypingWord[VSI+1] & (KEY_E | TONE_MASK)`, a bitwise AND that matches d, o, i...
+
+**Decided.**
+- `vowelCount <= 1`: the mark goes on `VEI`, where the only vowel is (the gi special case in `handleOldMark` goes).
+- Rule 3.1 compares letters: `CHR(VSI+1) == KEY_E` (e and ê, as before).
+- `getCharacterCode` checks the index: no such marked letter gives the letter without the mark.
+
+**Behavior change with default settings.** 543 nonsense strings with ii / yi / yo change, because rule 3.1 matched them by accident: 537 now go back to their keys (`ifitz`, was `iit`), 6 like `yfochz` give what `yoch` gives. No real Vietnamese word changes; Telex lock unchanged.
+
+**Measured.** Every a–z word up to 6 letters (321,272,406 per setting) under ASan: tone on a consonant 47,748 → 0 and 61,555 → 0 with spelling check off (old / modern marks), reads past the row 1,976 → 0 and 128 → 0; 0 → 0 with spelling check on. Goldens, metrics and realistic typing unchanged.
+
 ## 53. Teencode spelling (engine, off by default)
 
 **Status:** In the engine 2026-10-31, **on by default** (Tony: "ok, on by default"); an app setting comes with the main window revamp. Rules D53 (9 cases).

@@ -596,12 +596,13 @@ Uint32 getCharacterCode(const Uint32& data) {
         } else if (data & TONEW_MASK) {
             key |= TONEW_MASK;
         }
-        if (_unicodeTable.find(key) == _unicodeTable.end())
+        auto row = _unicodeTable.find(key);
+        if (row == _unicodeTable.end())
             return data & ~STANDALONE_MASK; //not found (a standalone w that lost its ư is just u, never a raw flagged code)
-        if (markElem < 0 || markElem >= (int)_unicodeTable[key].size())
+        if (markElem < 0 || markElem >= (int)row->second.size())
             return data & ~(STANDALONE_MASK | MARK_MASK); //no such marked letter (the d row only has Đ đ): the letter without the mark
-        
-        return _unicodeTable[key][markElem] | CHAR_CODE_MASK;
+
+        return row->second[markElem] | CHAR_CODE_MASK;
     } else { //doesn't has mark
         if (_unicodeTable.find(key) == _unicodeTable.end())
             return data & ~STANDALONE_MASK; //not found (a standalone w that lost its ư is just u, never a raw flagged code)
