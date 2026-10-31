@@ -378,7 +378,9 @@ extern "C" {
         NSArray *windows = CFBridgingRelease(CGWindowListCopyWindowInfo(kCGWindowListOptionOnScreenOnly | kCGWindowListExcludeDesktopElements,
                                                                         kCGNullWindowID));
         for (NSDictionary *window in windows) {
-            if ([[window objectForKey:(__bridge NSString *)kCGWindowOwnerName] isEqualToString:@"Spotlight"]) {
+            NSString *owner = [window objectForKey:(__bridge NSString *)kCGWindowOwnerName];
+            // macOS 27 shows the Spotlight panel from the Siri process
+            if ([owner isEqualToString:@"Spotlight"] || [owner isEqualToString:@"Siri"]) {
                 return true;
             }
         }
