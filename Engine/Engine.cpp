@@ -553,7 +553,9 @@ void checkCorrectVowel(vector<vector<Uint16>>& charset, int& i, int& k, const Ui
     
     //limit mark for end consonant: "C", "T"
     if (isCorect && charset[i].size() > 1 && (IS_KEY_F(markKey) || IS_KEY_X(markKey) || IS_KEY_R(markKey))) {
-        if (charset[i][1] == KEY_C || charset[i][1] == KEY_T || (charset[i][0] == KEY_A && charset[i][1] == (KEY_K | END_CONSONANT_MASK))) {
+        //ăk (D54) is a stop like c / t; "ak" and "âk" keep their marks
+        bool breveK = charset[i][0] == KEY_A && charset[i][1] == (KEY_K | END_CONSONANT_MASK) && _index >= 2 && (TypingWord[_index - 2] & TONEW_MASK);
+        if (charset[i][1] == KEY_C || charset[i][1] == KEY_T || breveK) {
             isCorect = false;
         } else if (charset[i].size() > 2 && (charset[i][2] == KEY_T)) {
             isCorect = false;
