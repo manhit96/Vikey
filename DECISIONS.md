@@ -23,6 +23,16 @@ If every listed change is intended, accept them with `Tools/autoswitch/check.sh 
 
 ---
 
+## 57. An input-source change applies at once (Mac)
+
+**Status:** Fixed 2026-10-31.
+
+**Problem.** The input-source notification reached Vikey only when the next change happened. Vikey is never the active app, and a background app's distributed notifications wait otherwise. So every switch applied the previous source's state: after ABC → Russian, Telex rewrote Russian (`tieengs` on the Russian layout gave `еiếng`); after French → ABC, ABC had no Vietnamese.
+
+**Decided.** The observer asks for immediate delivery (`CFNotificationSuspensionBehaviorDeliverImmediately`). Still checked once per input-source change, not per key (decision 10). Which sources Vikey steps aside for is unchanged.
+
+**Verified** on macOS 27 with the app typing through the event tap: each switch is received within 0.01 s; ABC → Russian → ABC → French → ABC gives `tiếng`, `ешуутпы` (Vikey stays out), `tiếng`, `tieengs` (French: other language, as before), `tiếng`.
+
 ## 53. Teencode spelling (engine, off by default)
 
 **Status:** In the engine 2026-10-31, **on by default** (Tony: "ok, on by default"); an app setting comes with the main window revamp. Rules D53 (9 cases).
