@@ -23,7 +23,7 @@ If every listed change is intended, accept them with `Tools/autoswitch/check.sh 
 
 ---
 
-## 60. Latin keyboard layouts keep Telex (Mac)
+## 56. Latin keyboard layouts keep Telex (Mac)
 
 **Status:** Proposed 2026-10-31. Needs Tony's call (see trade-off).
 
@@ -33,7 +33,7 @@ If every listed change is intended, accept them with `Tools/autoswitch/check.sh 
 
 **Trade-off.** Someone who switches to the French or German layout to write French or German now gets Telex there too (`je suis` → `je súi`); they switch Vikey to English as on ABC. Keeping the old behavior for them would need a setting.
 
-**Verified** on macOS 27 with the app typing through the event tap: French, German, British give `tiếng`; Russian gives `ешуутпы` (Vikey stays out, with decision 57). All 312 sources: 105 go from off to Telex, all Latin layouts; none from Telex to off.
+**Verified** on macOS 27 with the app typing through the event tap: French, German, British give `tiếng`; Russian gives `ешуутпы` (Vikey stays out, once an input-source change applies at once). All 312 sources: 105 go from off to Telex, all Latin layouts; none from Telex to off.
 
 ## 53. Teencode spelling (engine, off by default)
 
