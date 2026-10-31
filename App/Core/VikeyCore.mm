@@ -698,7 +698,7 @@ extern "C" {
             @"com.keepassxc.keepassxc", @"com.sinew.Enpass-Desktop", @"com.nordpass.macos.NordPass",
             // terminals (sudo and ssh passwords are typed in plain view of the event tap)
             @"com.apple.Terminal", @"com.googlecode.iterm2", @"dev.warp.Warp-Stable", @"com.mitchellh.ghostty",
-            @"io.alacritty", @"net.kovidgoyal.kitty", @"com.github.wez.wezterm", @"co.zeit.hyper", @"com.termius-dmg.mac"]];
+            @"org.alacritty", @"net.kovidgoyal.kitty", @"com.github.wez.wezterm", @"co.zeit.hyper", @"com.termius-dmg.mac"]];
         return vTypingLogKeys && !IsSecureEventInputEnabled() && ![excluded containsObject:_tlApp];
     }
 
