@@ -23,18 +23,6 @@ If every listed change is intended, accept them with `Tools/autoswitch/check.sh 
 
 ---
 
-## 59. Granting permission when an old entry is in the way (Mac)
-
-**Status:** Fixed 2026-10-31.
-
-**Problem.** macOS keeps one permission entry per app, tied to the code signature that was granted. When Vikey runs with a different signature (a build signed another way, or an entry macOS lost track of), System Settings still shows Vikey switched on, the "Mở Cài đặt hệ thống" button adds nothing, and Vikey never starts. Seen on macOS 27: the onboarding stays up and typing stays plain.
-
-**Decided.**
-- When Vikey isn't trusted, the button first clears Vikey's own entry (`tccutil reset Accessibility com.devuap.vikey`, no admin rights, no other app touched), then asks again, so Vikey shows up afresh, switched off, ready to turn on. The entry is shared by every Vikey build (one per bundle id), so a build signed differently loses it too; macOS grants one signature at a time anyway. tccutil is waited for with `waitpid` (~20 ms), not `waitUntilExit`, which would run the run loop inside the button's action.
-- The onboarding names the permission as System Settings does, in Vietnamese and English: "Điều khiển thiết bị và truy cập dữ liệu (Device Control and Data Access)" from macOS 27 (System Settings' own Vietnamese text), "Trợ năng (Accessibility)" before. The main window's button says "Cấp quyền cho Vikey…", like the menu bar.
-
-**Verified** on macOS 27 with a build signed differently from the granted entry: before, the button changed nothing and typing stayed plain; after, Vikey reappeared in the list and typed `tiếng việt` once switched on.
-
 ## 53. Teencode spelling (engine, off by default)
 
 **Status:** In the engine 2026-10-31, **on by default** (Tony: "ok, on by default"); an app setting comes with the main window revamp. Rules D53 (9 cases).
