@@ -23,6 +23,18 @@ If every listed change is intended, accept them with `Tools/autoswitch/check.sh 
 
 ---
 
+## 54. "ăk" is a Vietnamese ending (Đắk Lắk)
+
+**Status:** In the engine 2026-10-31. Rules D54 (9 cases).
+
+**Problem.** Official province and district names of Tây Nguyên end in -k: Đắk Lắk, Đắk Nông, Đăk Tô, Đắk Glong, Đắk Mil. They couldn't be typed with the default settings: "Ddawsk Lawsk" ended as "Ddawsk Lawsk", "Ddawks Lawks" as its keys, "Ddawk Too" as "Ddawk Tô", and a tone typed after the k was never placed ("dawks" showed "dăks"), even in plain Telex. The only final k the engine had was OpenKey's quick end consonant k → ch (`KEY_K | END_CONSONANT_MASK`), cut in D10, and the spelling check compares the plain key, so "ăk" was never a valid ending (teencode's k after i / ư, D53, didn't cover it).
+
+**Decision.** A k right after ă ends a syllable: no tone, sắc or nặng (Đăk, Đắk, đặk), like the stop endings -c and -t; huyền, hỏi and ngã stay invalid ("dawkf" goes back to its keys). The tone works typed before or after the k. A w after "ăk" stays a letter, so it doesn't take the breve off ("awkward", "hawkweed").
+
+**Scope.** Only ăk: the breve is typed on purpose (aw), so English rarely hits it. Plain "ak", "uk", "ok" would catch English words (look, dusk, husk, yaks), so Krông Búk and Yók Đôn stay out for now.
+
+**Measured.** Goldens, Telex lock, metrics and realistic typing unchanged. 256,875 English words (/usr/share/dict/words, en_50k, en_spell_ok) typed in both modes: English mode unchanged; Vietnamese mode changed 7 rare words that are themselves "Căk" (bawk, cawk, chawk, lawk, mawk, pawk, quawk → băk…). Known: "gawks" (not in the English list) becomes "gắk" in Vietnamese mode; all-caps "ĐẮK LẮK" goes back to its keys like other syllables not in the word list (D23).
+
 ## 53. Teencode spelling (engine, off by default)
 
 **Status:** In the engine 2026-10-31, **on by default** (Tony: "ok, on by default"); an app setting comes with the main window revamp. Rules D53 (9 cases).
