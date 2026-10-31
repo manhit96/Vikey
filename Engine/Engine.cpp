@@ -296,6 +296,11 @@ void checkSpelling(const bool& forceCheckVowel=false) {
                 }
             }
             
+            //ăk (D54): the k coda of Tây Nguyên place names (Đắk Lắk, Đăk Tô); a stop like c / t: no tone, sắc or nặng
+            if (!_spellingOK && k + 1 == _spellingEndIndex && CHR(k) == KEY_K && k > 0 && CHR(k - 1) == KEY_A && (TypingWord[k - 1] & TONEW_MASK)) {
+                Uint32 mark = TypingWord[k - 1] & MARK_MASK;
+                _spellingOK = !mark || mark == MARK1_MASK || mark == MARK5_MASK;
+            }
             if (!_spellingOK && vTeencode && k + 1 == _spellingEndIndex && CHR(k) == KEY_K && k > 0 &&
                 (CHR(k - 1) == KEY_I || (CHR(k - 1) == KEY_U && (TypingWord[k - 1] & TONEW_MASK))))
                 { _spellingOK = true; _teenRule = true; }                                             //thík, ừk
@@ -529,10 +534,15 @@ void checkCorrectVowel(vector<vector<Uint16>>& charset, int& i, int& k, const Ui
     }
     k = _index - 1;
     for (j = (int)charset[i].size() - 1; j >= 0; j--) {
+        //a w after "ăk" stays a letter: it would take the breve off ("awkward" -> "akward", "hawkweed")
+        bool kw = CHR(k) == KEY_K && IS_KEY_W(markKey) && k > 0 && (TypingWord[k - 1] & TONEW_MASK);
         //teencode (D53): the k / y entries marked END_CONSONANT_MASK count ("thík", "ừk", "gòy")
-        bool teen = vTeencode && (charset[i][j] & END_CONSONANT_MASK) &&
+        bool teen = vTeencode && !kw && (charset[i][j] & END_CONSONANT_MASK) &&
                     (Uint16)(charset[i][j] & ~END_CONSONANT_MASK) == CHR(k) && (CHR(k) == KEY_K || (CHR(k) == KEY_Y && IS_KEY_F(markKey)));
-        if (charset[i][j] != CHR(k) && !teen) {
+        //ăk (D54): the k entry marked END_CONSONANT_MASK counts after ă ("Đắk Lắk")
+        bool ak = !kw && charset[i][j] == (KEY_K | END_CONSONANT_MASK) && CHR(k) == KEY_K && k > 0 &&
+                  CHR(k - 1) == KEY_A && (TypingWord[k - 1] & TONEW_MASK);
+        if (charset[i][j] != CHR(k) && !teen && !ak) {
             isCorect = false;
             return;
         }
@@ -543,7 +553,9 @@ void checkCorrectVowel(vector<vector<Uint16>>& charset, int& i, int& k, const Ui
     
     //limit mark for end consonant: "C", "T"
     if (isCorect && charset[i].size() > 1 && (IS_KEY_F(markKey) || IS_KEY_X(markKey) || IS_KEY_R(markKey))) {
-        if (charset[i][1] == KEY_C || charset[i][1] == KEY_T) {
+        //ăk (D54) is a stop like c / t; "ak" and "âk" keep their marks
+        bool breveK = charset[i][0] == KEY_A && charset[i][1] == (KEY_K | END_CONSONANT_MASK) && _index >= 2 && (TypingWord[_index - 2] & TONEW_MASK);
+        if (charset[i][1] == KEY_C || charset[i][1] == KEY_T || breveK) {
             isCorect = false;
         } else if (charset[i].size() > 2 && (charset[i][2] == KEY_T)) {
             isCorect = false;

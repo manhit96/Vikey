@@ -17,7 +17,7 @@ OUT = os.path.join(HERE, '..', '..', 'Engine', 'AutoSwitchData.h')
 TONES = {'́': 's', '̀': 'f', '̉': 'r', '̃': 'x', '̣': 'j'}
 VN_LETTERS = set("abcdeghiklmnopqrstuvxy")
 SYL = re.compile("^(ngh|ch|gh|gi|kh|ng|nh|ph|qu|th|tr|b|c|dd|d|g|h|k|l|m|n|p|r|s|t|v|x)?"
-                 "(a|aw|aa|e|ee|i|o|oo|ow|u|uw|y)+(ch|ng|nh|c|m|n|p|t)?[sfrxj]?$")
+                 "(a|aw|aa|e|ee|i|o|oo|ow|u|uw|y)+(ch|ng|nh|c|m|n|p|t|(?<=aw)k)?[sfrxj]?$")   # ăk: Đắk Lắk (D54)
 
 def vn_key(word):
     out, tone = [], ''
@@ -110,6 +110,10 @@ if inf_total:
     vn = {k: max(-120, min(120, round(10 * math.log10(rate(k) * 1e6)))) for k in keys if vn.get(k, 0) + inf.get(k, 0) > 0}
 else:
     vn = {k: score(c, vi_total) for k, c in vn.items()}
+# Tây Nguyên place names with the ăk ending (D54): almost absent from subtitles and chat, so they get a floor
+# (~40 per million: all caps ĐẮK LẮK isn't taken for an acronym, D23); real counts from the data win
+for k, s in (('ddawks', 16), ('lawks', 16), ('ddawk', 10)):
+    vn.setdefault(k, s)
 # Not Vietnamese words, only names and loan spellings (Sê San, sê-ri) that collide with common English (Tony: D40)
 for k in ('see',):
     vn.pop(k, None)
