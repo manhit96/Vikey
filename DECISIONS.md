@@ -23,16 +23,6 @@ If every listed change is intended, accept them with `Tools/autoswitch/check.sh 
 
 ---
 
-## 58. Spotlight on macOS 27 (Mac)
-
-**Status:** Fixed 2026-10-31.
-
-**Problem.** Vikey recognises the Spotlight panel by a visible window whose owner is "Spotlight", then replaces the word through a selection instead of the browser autocomplete workaround. On macOS 27 the panel belongs to the Siri process, so Spotlight got the autocomplete workaround, and typing there often doubled a vowel: `Vieejt Nam` gave `Viiệt Nam`, `truwowngf` gave `truường` (7 of 10 lines in a live test).
-
-**Decided.** A visible window owned by "Siri" counts as Spotlight. With Spotlight closed there is no such window, so other apps are unchanged.
-
-**Verified** on macOS 27, 10 lines typed into Spotlight at two typing speeds: 7 wrong before, 0 after.
-
 ## 53. Teencode spelling (engine, off by default)
 
 **Status:** In the engine 2026-10-31, **on by default** (Tony: "ok, on by default"); an app setting comes with the main window revamp. Rules D53 (9 cases).
