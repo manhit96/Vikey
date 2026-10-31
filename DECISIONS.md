@@ -25,11 +25,13 @@ If every listed change is intended, accept them with `Tools/autoswitch/check.sh 
 
 ## 54. "ăk" is a Vietnamese ending (Đắk Lắk)
 
-**Status:** In the engine 2026-10-31. Rules D54 (9 cases).
+**Status:** In the engine 2026-10-31. Rules D54 (11 cases).
 
 **Problem.** Official province and district names of Tây Nguyên end in -k: Đắk Lắk, Đắk Nông, Đăk Tô, Đắk Glong, Đắk Mil. They couldn't be typed with the default settings: "Ddawsk Lawsk" ended as "Ddawsk Lawsk", "Ddawks Lawks" as its keys, "Ddawk Too" as "Ddawk Tô", and a tone typed after the k was never placed ("dawks" showed "dăks"), even in plain Telex. The only final k the engine had was OpenKey's quick end consonant k → ch (`KEY_K | END_CONSONANT_MASK`), cut in D10, and the spelling check compares the plain key, so "ăk" was never a valid ending (teencode's k after i / ư, D53, didn't cover it).
 
 **Decision.** A k right after ă ends a syllable: no tone, sắc or nặng (Đăk, Đắk, đặk), like the stop endings -c and -t; huyền, hỏi and ngã stay invalid ("dawkf" goes back to its keys). The tone works typed before or after the k. A w after "ăk" stays a letter, so it doesn't take the breve off ("awkward", "hawkweed").
+
+**Word data.** "Đắk", "Lắk", "Đăk" are almost absent from the subtitle and chat counts, and the syllable filter in `build_dict.py` dropped every k ending, so from English mode "Ddawsk Lawsk" stayed English and all-caps "ĐẮK LẮK" was taken for an acronym (D23). The filter now keeps ăk, and these three get a floor score (16, ~40 per million; Đăk 10) unless the data has them; the three entries were added to `AutoSwitchData.h` without regenerating the rest. Measured: goldens, metrics and realistic typing unchanged; 256,849 English words typed lowercase in both modes and in all caps: 0 changes; the suggestion strip changes only for the prefixes "law" (lắk 4th) and "ddaw" (đắk 5th).
 
 **Scope.** Only ăk: the breve is typed on purpose (aw), so English rarely hits it. Plain "ak", "uk", "ok" would catch English words (look, dusk, husk, yaks), so Krông Búk and Yók Đôn stay out for now.
 
