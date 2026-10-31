@@ -1228,6 +1228,14 @@ static NSTimer* _watchdog = nil;
 }
 
 + (void)requestAccessibility {
+    // An entry left from a differently signed build shows Vikey switched on while macOS still refuses it, and the prompt
+    // then adds nothing. Clearing Vikey's own entry first makes the prompt list Vikey afresh.
+    if (!AXIsProcessTrusted()) {
+        NSTask* reset = [NSTask launchedTaskWithExecutableURL:[NSURL fileURLWithPath:@"/usr/bin/tccutil"]
+                                                    arguments:@[@"reset", @"Accessibility", NSBundle.mainBundle.bundleIdentifier ?: @"com.devuap.vikey"]
+                                                        error:nil terminationHandler:nil];
+        [reset waitUntilExit];
+    }
     NSDictionary* options = @{(__bridge NSString*)kAXTrustedCheckOptionPrompt: @YES};
     AXIsProcessTrustedWithOptions((__bridge CFDictionaryRef)options);
 }
