@@ -201,7 +201,7 @@ struct MainView: View {
                     Text("Bấm \(Hotkey(raw: hotkeyRaw).display) để chuyển")
                         .font(.callout).foregroundStyle(.secondary)
                 } else {
-                    Button("Cấp quyền \(OnboardingView.permissionName)…") { OnboardingWindow.show() }
+                    Button("Cấp quyền cho Vikey…") { OnboardingWindow.show() }
                         .buttonStyle(.link)
                 }
             }

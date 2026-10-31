@@ -9,6 +9,8 @@
 #import <Cocoa/Cocoa.h>
 #import <Carbon/Carbon.h>
 #import <Foundation/Foundation.h>
+#include <spawn.h>
+#include <sys/wait.h>
 #import "Engine.h"
 #import "VikeyCore.h"
 
@@ -1231,10 +1233,12 @@ static NSTimer* _watchdog = nil;
     // An entry left from a differently signed build shows Vikey switched on while macOS still refuses it, and the prompt
     // then adds nothing. Clearing Vikey's own entry first makes the prompt list Vikey afresh.
     if (!AXIsProcessTrusted()) {
-        NSTask* reset = [NSTask launchedTaskWithExecutableURL:[NSURL fileURLWithPath:@"/usr/bin/tccutil"]
-                                                    arguments:@[@"reset", @"Accessibility", NSBundle.mainBundle.bundleIdentifier ?: @"com.devuap.vikey"]
-                                                        error:nil terminationHandler:nil];
-        [reset waitUntilExit];
+        // waitpid, not -[NSTask waitUntilExit]: that spins the run loop inside the button's action. tccutil takes a few ms.
+        const char* bundleId = (NSBundle.mainBundle.bundleIdentifier ?: @"com.devuap.vikey").UTF8String;
+        char* argv[] = {(char*)"tccutil", (char*)"reset", (char*)"Accessibility", (char*)bundleId, NULL};
+        extern char** environ;
+        pid_t pid;
+        if (posix_spawn(&pid, "/usr/bin/tccutil", NULL, NULL, argv, environ) == 0) waitpid(pid, NULL, 0);
     }
     NSDictionary* options = @{(__bridge NSString*)kAXTrustedCheckOptionPrompt: @YES};
     AXIsProcessTrustedWithOptions((__bridge CFDictionaryRef)options);

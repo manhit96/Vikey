@@ -138,15 +138,16 @@ struct OnboardingView: View {
         }
     }
 
-    /// What System Settings calls the permission: "Device Control and Data Access" from macOS 27.
+    /// What System Settings calls the permission, in Vietnamese and in English: renamed in macOS 27.
     static var permissionName: String {
-        ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 27 ? "Device Control and Data Access" : "Trợ năng"
+        ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 27
+            ? "Điều khiển thiết bị và truy cập dữ liệu (Device Control and Data Access)" : "Trợ năng (Accessibility)"
     }
 
     private var permission: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Cho phép Vikey đọc phím gõ").font(.title2.weight(.semibold))
-            Text("Vikey cần quyền Trợ năng (Accessibility) để biến phím bạn gõ thành chữ tiếng Việt. Mọi thứ xử lý ngay trên máy, không gửi đi đâu.")
+            Text("Vikey cần quyền \(Self.permissionName) để biến phím bạn gõ thành chữ tiếng Việt. Mọi thứ xử lý ngay trên máy, không gửi đi đâu.")
                 .foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
             VStack(alignment: .leading, spacing: 8) {
                 Label("Bấm nút bên dưới để mở Cài đặt hệ thống", systemImage: "1.circle.fill")
