@@ -148,3 +148,12 @@ D53	1	the zoo 	the zoo 	0	a tie in English context stays English
 D53	1	ddi zoo ddaay 	đi zô đây 	1	the same tie in Vietnamese context is teencode
 D53	1	look 	look 	0	k only after i or ư: look never becomes lôk
 D53	1	oxy 	oxy 	0	oy only with huyền: oxy stays
+D55	1	chuwaa	chưaa	1	"ưa" + a: the horn stays and the a is a plain letter (gave "chưâ", with a u inside the engine)
+D55	1	chuwaa 	chuwaa 	0	at the end of the word "ưaa" is invalid: keys back, like any other invalid word (gave "chưâ")
+D55	1	vuwfaa 	vuwfaa 	0	"vừa" + a never loses the horn or moves the tone onto an â (gave "vuầ")
+D55	1	vuwfa 	vừa 	1	"vừa" itself is unchanged
+D55	1	luaan tuaanf quaan 	luân tuần quân 	1	"ua" + a still gives uâ
+D55	1	thuwoo	thuô	1	"ưo" + o gives uô and the screen shows the u (gave "thưô")
+D55	1	muwoon	muôn	1	the same before a final consonant (gave "mưôn")
+D55	1	luwee	luê	1	"ưe" + e gives uê (gave "lưê")
+D55	1	thuwoowngf 	thường 	1	ươ and uô still swap with w and o (a doubled o inside "thường")

@@ -23,6 +23,20 @@ If every listed change is intended, accept them with `Tools/autoswitch/check.sh 
 
 ---
 
+## 55. "vừa" + a keeps the horn
+
+**Status:** In the engine 2026-10-31. Rules D55 (9 cases).
+
+**Problem.** A doubled a/o/e after ư took the horn off the ư inside the engine but left ư on the screen. "vuwfaa" gave "vuầ" (the horn went with the next redraw, the tone jumped onto the new â: the word "vừa" was gone); "chuwaa" left "chưâ" on screen while the engine held "chuâ", so the end-of-word spelling check passed a word that isn't Vietnamese. Same split for "thuwoo" (screen "thưô", engine "thuô"), "muwoon", "luwee".
+
+**Fix.**
+- "ưa" + a: the a is a plain letter ("chưaa"). "ưa" is a whole rime and no rime has ư before â, so the end of the word decides like any other invalid word: keys back ("chuwaa", D10/D8). "ua" + a still gives uâ (luân, tuần, quân).
+- "ưo"/"ươ" + o and "ưe" + e still give uô / uê (Telex: the last mark wins, and w turns uô back into ươ, so a doubled o inside "thường" still works). The ư that became u is now redrawn, so the screen shows what the engine holds.
+
+**Measured.** Golden snapshots, Telex lock, metrics, realistic typing and fat-finger: unchanged. Typing every rime of the vowel tables after every onset with an extra a/o/e/w/aa/oo/ee/ww, final and tone (2.0M words): 19,885 change, all with a ư/ơ/ă before the doubled key. 10,346 "ưa" + a words now go back to their keys (were "ưâ", "uầ"...); 9,344 now show the u (or a) the engine holds instead of a stale ư (or ă) (160 of them become real syllables: uông, uôi, uên). Trade-off: 195 words typed "ưa" + a + final ("chuwaanr", "uawayf") used to become uâ words (chuẩn, uầy); their keys now go back.
+
+**Not changed (taste, for Tony).** "cuaa" stays "cuâ": the spelling check accepts an open uâ like an open â ("baa" → "bâ") and doesn't check c/k/q before a rime ("cuân", "ká"); tightening that is a separate rule. Mid-word the tone of "vừa" + a moves to the plain a ("vưaà") like with any third vowel ("vừa" + e → "vưaè").
+
 ## 53. Teencode spelling (engine, off by default)
 
 **Status:** In the engine 2026-10-31, **on by default** (Tony: "ok, on by default"); an app setting comes with the main window revamp. Rules D53 (9 cases).
