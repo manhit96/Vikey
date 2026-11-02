@@ -299,7 +299,7 @@ void checkSpelling(const bool& forceCheckVowel=false) {
                 }
             }
             
-            //ăk (D54): the k coda of Tây Nguyên place names (Đắk Lắk, Đăk Tô); a stop like c / t: no tone, sắc or nặng
+            //ăk (D60): the k coda of Tây Nguyên place names (Đắk Lắk, Đăk Tô); a stop like c / t: no tone, sắc or nặng
             if (!_spellingOK && k + 1 == _spellingEndIndex && CHR(k) == KEY_K && k > 0 && CHR(k - 1) == KEY_A && (TypingWord[k - 1] & TONEW_MASK)) {
                 Uint32 mark = TypingWord[k - 1] & MARK_MASK;
                 _spellingOK = !mark || mark == MARK1_MASK || mark == MARK5_MASK;
@@ -547,7 +547,7 @@ void checkCorrectVowel(vector<vector<Uint16>>& charset, int& i, int& k, const Ui
         //teencode (D53): the k / y entries marked END_CONSONANT_MASK count ("thík", "ừk", "gòy")
         bool teen = vTeencode && !kw && (charset[i][j] & END_CONSONANT_MASK) &&
                     (Uint16)(charset[i][j] & ~END_CONSONANT_MASK) == CHR(k) && (CHR(k) == KEY_K || (CHR(k) == KEY_Y && IS_KEY_F(markKey)));
-        //ăk (D54): the k entry marked END_CONSONANT_MASK counts after ă ("Đắk Lắk")
+        //ăk (D60): the k entry marked END_CONSONANT_MASK counts after ă ("Đắk Lắk")
         bool ak = !kw && charset[i][j] == (KEY_K | END_CONSONANT_MASK) && CHR(k) == KEY_K && k > 0 &&
                   CHR(k - 1) == KEY_A && (TypingWord[k - 1] & TONEW_MASK);
         if (charset[i][j] != CHR(k) && !teen && !ak) {
@@ -561,7 +561,7 @@ void checkCorrectVowel(vector<vector<Uint16>>& charset, int& i, int& k, const Ui
     
     //limit mark for end consonant: "C", "T"
     if (isCorect && charset[i].size() > 1 && (IS_KEY_F(markKey) || IS_KEY_X(markKey) || IS_KEY_R(markKey))) {
-        //ăk (D54) is a stop like c / t; "ak" and "âk" keep their marks
+        //ăk (D60) is a stop like c / t; "ak" and "âk" keep their marks
         bool breveK = charset[i][0] == KEY_A && charset[i][1] == (KEY_K | END_CONSONANT_MASK) && _index >= 2 && (TypingWord[_index - 2] & TONEW_MASK);
         if (charset[i][1] == KEY_C || charset[i][1] == KEY_T || breveK) {
             isCorect = false;
@@ -577,7 +577,7 @@ void checkCorrectVowel(vector<vector<Uint16>>& charset, int& i, int& k, const Ui
     }
     
     //"ưa" + a ("vừa" + a, "chưa" + a): ưa is a whole rime, and â after it would take the horn off the ư
-    //("vuầ", "chuâ": the word typed is gone). The key stays a plain letter; the end of the word decides (D55).
+    //("vuầ", "chuâ": the word typed is gone). The key stays a plain letter; the end of the word decides (D61).
     //ư + oo / ee still turns into uô / uê: ươ and uô swap with w and o ("thuwoowngf" -> "thường").
     if (isCorect && k >= 0 && markKey == KEY_A && CHR(k) == KEY_U && (TypingWord[k] & TONEW_MASK)) {
         isCorect = false;
@@ -924,7 +924,7 @@ void insertAOE(const Uint16& data, const bool& isCaps) {
     findAndCalculateVowel();
     
     //remove W tone
-    int hornGone = -1;   //the first letter that lost its horn: redrawn too, even before the one that gets ^ (D55)
+    int hornGone = -1;   //the first letter that lost its horn: redrawn too, even before the one that gets ^ (D61)
     for (ii = VSI; ii <= VEI; ii++) {
         if ((TypingWord[ii] & TONEW_MASK) && hornGone < 0) hornGone = ii;
         TypingWord[ii] &= ~TONEW_MASK;

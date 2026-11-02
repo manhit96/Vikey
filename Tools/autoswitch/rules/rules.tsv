@@ -163,23 +163,23 @@ D56	1	w 	ư 	1	Telex: a lone w is ư
 D58	1	docs 	docs 	0	docs (documentation) in Vietnamese mode stays English (X report, Tony)
 D58	1	xem docs nhes 	xem docs nhé 	1	docs in a Vietnamese sentence
 D58	1	nois docs 	nói dóc 	1	"nói dóc" (to lie) still converts
-D54	1	tinhr Ddawsk Lawsk 	tỉnh Đắk Lắk 	1	ăk: the k coda of Tây Nguyên place names, tone before k
-D54	1	Ddawks Lawks 	Đắk Lắk 	1	ăk: tone typed after k
-D54	1	Ddawk Too 	Đăk Tô 	1	ăk without a tone (Đăk Tô)
-D54	0	Ddawsk Lawsk 	Đắk Lắk 	1	ăk place names are in the word data: from English mode they switch to Vietnamese
-D54	1	DDAWSK LAWSK 	ĐẮK LẮK 	1	ăk place names are common enough that all caps stays Vietnamese (D23)
-D54	1	Ddawsk Noong 	Đắk Nông 	1	ăk then a common word
-D54	1	dawkj 	dặk 	1	ăk takes nặng, like ặc
-D54	1	dawkf 	dawkf 	1	no huyền, hỏi, ngã on a stop coda (like -c, -t): put back to its keys
-D54	1	hawks 	hawks 	0	an English word with "awk" stays English
-D54	1	awkward 	awkward 	0	a w after ăk stays a letter (no "akward")
-D54	1	hawkweed 	hawkweed 	0	a w after ăk stays a letter, also for words not in the English list
-D55	1	chuwaa	chưaa	1	"ưa" + a: the horn stays and the a is a plain letter (gave "chưâ", with a u inside the engine)
-D55	1	chuwaa 	chuwaa 	0	at the end of the word "ưaa" is invalid: keys back, like any other invalid word (gave "chưâ")
-D55	1	vuwfaa 	vuwfaa 	0	"vừa" + a never loses the horn or moves the tone onto an â (gave "vuầ")
-D55	1	vuwfa 	vừa 	1	"vừa" itself is unchanged
-D55	1	luaan tuaanf quaan 	luân tuần quân 	1	"ua" + a still gives uâ
-D55	1	thuwoo	thuô	1	"ưo" + o gives uô and the screen shows the u (gave "thưô")
-D55	1	muwoon	muôn	1	the same before a final consonant (gave "mưôn")
-D55	1	luwee	luê	1	"ưe" + e gives uê (gave "lưê")
-D55	1	thuwoowngf 	thường 	1	ươ and uô still swap with w and o (a doubled o inside "thường")
+D60	1	tinhr Ddawsk Lawsk 	tỉnh Đắk Lắk 	1	ăk: the k coda of Tây Nguyên place names, tone before k
+D60	1	Ddawks Lawks 	Đắk Lắk 	1	ăk: tone typed after k
+D60	1	Ddawk Too 	Đăk Tô 	1	ăk without a tone (Đăk Tô)
+D60	0	Ddawsk Lawsk 	Đắk Lắk 	1	ăk place names are in the word data: from English mode they switch to Vietnamese
+D60	1	DDAWSK LAWSK 	ĐẮK LẮK 	1	ăk place names are common enough that all caps stays Vietnamese (D23)
+D60	1	Ddawsk Noong 	Đắk Nông 	1	ăk then a common word
+D60	1	dawkj 	dặk 	1	ăk takes nặng, like ặc
+D60	1	dawkf 	dawkf 	1	no huyền, hỏi, ngã on a stop coda (like -c, -t): put back to its keys
+D60	1	hawks 	hawks 	0	an English word with "awk" stays English
+D60	1	awkward 	awkward 	0	a w after ăk stays a letter (no "akward")
+D60	1	hawkweed 	hawkweed 	0	a w after ăk stays a letter, also for words not in the English list
+D61	1	chuwaa	chưaa	1	"ưa" + a: the horn stays and the a is a plain letter (gave "chưâ", with a u inside the engine)
+D61	1	chuwaa 	chuwaa 	0	at the end of the word "ưaa" is invalid: keys back, like any other invalid word (gave "chưâ")
+D61	1	vuwfaa 	vuwfaa 	0	"vừa" + a never loses the horn or moves the tone onto an â (gave "vuầ")
+D61	1	vuwfa 	vừa 	1	"vừa" itself is unchanged
+D61	1	luaan tuaanf quaan 	luân tuần quân 	1	"ua" + a still gives uâ
+D61	1	thuwoo	thuô	1	"ưo" + o gives uô and the screen shows the u (gave "thưô")
+D61	1	muwoon	muôn	1	the same before a final consonant (gave "mưôn")
+D61	1	luwee	luê	1	"ưe" + e gives uê (gave "lưê")
+D61	1	thuwoowngf 	thường 	1	ươ and uô still swap with w and o (a doubled o inside "thường")

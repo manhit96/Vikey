@@ -5,6 +5,46 @@ Each entry records what was asked, what was decided, and its status. Newest firs
 
 Status values: **Shipped** (in a build Tony has), **Agreed** (decided, not built yet), **Rejected**.
 
+## 62. Latin keyboard layouts keep Telex (Mac)
+
+**Status:** Proposed 2026-10-31. Needs Tony's call (see trade-off).
+
+**Problem.** Vikey stepped aside for every input source whose first language isn't `en`. French AZERTY, German QWERTZ, Spanish, Polish, Turkish... (105 of the 312 keyboard sources on macOS 27) lost Vietnamese, although the key mapping for non-QWERTY layouts already handles them. Mac has no setting for this (`vOtherLanguage` is fixed at 1).
+
+**Decided.** Keyboard layouts: Vikey steps aside only for layouts that can't type Latin letters (`kTISPropertyInputSourceIsASCIICapable`: Russian, Greek, Arabic, Hebrew, Thai...) and for Vietnamese layouts. Input methods (Japanese, Chinese, Korean...) keep the old rule. Still checked once per input-source change (decision 10).
+
+**Trade-off.** Someone who switches to the French or German layout to write French or German now gets Telex there too (`je suis` → `je súi`); they switch Vikey to English as on ABC. Keeping the old behavior for them would need a setting.
+
+**Verified** on macOS 27 with the app typing through the event tap: French, German, British give `tiếng`; Russian gives `ешуутпы` (Vikey stays out, once an input-source change applies at once). All 312 sources: 105 go from off to Telex, all Latin layouts; none from Telex to off.
+
+## 61. "vừa" + a keeps the horn
+
+**Status:** In the engine 2026-10-31. Rules D61 (9 cases).
+
+**Problem.** A doubled a/o/e after ư took the horn off the ư inside the engine but left ư on the screen. "vuwfaa" gave "vuầ" (the horn went with the next redraw, the tone jumped onto the new â: the word "vừa" was gone); "chuwaa" left "chưâ" on screen while the engine held "chuâ", so the end-of-word spelling check passed a word that isn't Vietnamese. Same split for "thuwoo" (screen "thưô", engine "thuô"), "muwoon", "luwee".
+
+**Fix.**
+- "ưa" + a: the a is a plain letter ("chưaa"). "ưa" is a whole rime and no rime has ư before â, so the end of the word decides like any other invalid word: keys back ("chuwaa", D10/D8). "ua" + a still gives uâ (luân, tuần, quân).
+- "ưo"/"ươ" + o and "ưe" + e still give uô / uê (Telex: the last mark wins, and w turns uô back into ươ, so a doubled o inside "thường" still works). The ư that became u is now redrawn, so the screen shows what the engine holds.
+
+**Measured.** Golden snapshots, Telex lock, metrics, realistic typing and fat-finger: unchanged. Typing every rime of the vowel tables after every onset with an extra a/o/e/w/aa/oo/ee/ww, final and tone (2.0M words): 19,885 change, all with a ư/ơ/ă before the doubled key. 10,346 "ưa" + a words now go back to their keys (were "ưâ", "uầ"...); 9,344 now show the u (or a) the engine holds instead of a stale ư (or ă) (160 of them become real syllables: uông, uôi, uên). Trade-off: 195 words typed "ưa" + a + final ("chuwaanr", "uawayf") used to become uâ words (chuẩn, uầy); their keys now go back.
+
+**Not changed (taste, for Tony).** "cuaa" stays "cuâ": the spelling check accepts an open uâ like an open â ("baa" → "bâ") and doesn't check c/k/q before a rime ("cuân", "ká"); tightening that is a separate rule. Mid-word the tone of "vừa" + a moves to the plain a ("vưaà") like with any third vowel ("vừa" + e → "vưaè").
+
+## 60. "ăk" is a Vietnamese ending (Đắk Lắk)
+
+**Status:** In the engine 2026-10-31. Rules D60 (11 cases).
+
+**Problem.** Official province and district names of Tây Nguyên end in -k: Đắk Lắk, Đắk Nông, Đăk Tô, Đắk Glong, Đắk Mil. They couldn't be typed with the default settings: "Ddawsk Lawsk" ended as "Ddawsk Lawsk", "Ddawks Lawks" as its keys, "Ddawk Too" as "Ddawk Tô", and a tone typed after the k was never placed ("dawks" showed "dăks"), even in plain Telex. The only final k the engine had was OpenKey's quick end consonant k → ch (`KEY_K | END_CONSONANT_MASK`), cut in D10, and the spelling check compares the plain key, so "ăk" was never a valid ending (teencode's k after i / ư, D53, didn't cover it).
+
+**Decision.** A k right after ă ends a syllable: no tone, sắc or nặng (Đăk, Đắk, đặk), like the stop endings -c and -t; huyền, hỏi and ngã stay invalid ("dawkf" goes back to its keys). Only after ă: "ak" and "âk" keep their marks when spelling check is off ("baakf" → "bầk", as before). The tone works typed before or after the k. A w after "ăk" stays a letter, so it doesn't take the breve off ("awkward", "hawkweed").
+
+**Word data.** "Đắk", "Lắk", "Đăk" are almost absent from the subtitle and chat counts, and the syllable filter in `build_dict.py` dropped every k ending, so from English mode "Ddawsk Lawsk" stayed English and all-caps "ĐẮK LẮK" was taken for an acronym (D23). The filter now keeps ăk, and these three get a floor score (16, ~40 per million; Đăk 10) unless the data has them; the three entries were added to `AutoSwitchData.h` without regenerating the rest. Measured against the same engine without the three entries: goldens, metrics and realistic typing unchanged; the 256,875 English words below typed lowercase and in all caps, in both modes: 0 changes; the suggestion strip changes only for the prefixes "law" (lắk 4th) and "ddaw" (đắk 5th).
+
+**Scope.** Only ăk: the breve is typed on purpose (aw), so English rarely hits it. Plain "ak", "uk", "ok" would catch English words (look, dusk, husk, yaks), so Krông Búk and Yók Đôn stay out for now.
+
+**Measured.** Goldens, Telex lock, metrics and realistic typing unchanged. 256,875 English words (/usr/share/dict/words, en_50k, en_spell_ok) typed in both modes: English mode unchanged; Vietnamese mode changed 7 rare words that are themselves "Căk" (bawk, cawk, chawk, lawk, mawk, pawk, quawk → băk…). In all caps nothing changes. Known: "gawks" (not in the English list) becomes "gắk" in Vietnamese mode. Spelling check off: 178,640 key sequences change only where ă is followed by k.
+
 ## 59. ":" and ";" after a space stay where they are (phone keyboards)
 
 **Status:** Shipped 2026-11-02 (Tony changed his mind on the earlier behavior).
@@ -85,44 +125,6 @@ It checks:
 If every listed change is intended, accept them with `Tools/autoswitch/check.sh update`. Add a case for the new decision to `rules.tsv`. GitHub Actions runs the same check on every push.
 
 ---
-
-## 54. "ăk" is a Vietnamese ending (Đắk Lắk)
-
-**Status:** In the engine 2026-10-31. Rules D54 (11 cases).
-
-**Problem.** Official province and district names of Tây Nguyên end in -k: Đắk Lắk, Đắk Nông, Đăk Tô, Đắk Glong, Đắk Mil. They couldn't be typed with the default settings: "Ddawsk Lawsk" ended as "Ddawsk Lawsk", "Ddawks Lawks" as its keys, "Ddawk Too" as "Ddawk Tô", and a tone typed after the k was never placed ("dawks" showed "dăks"), even in plain Telex. The only final k the engine had was OpenKey's quick end consonant k → ch (`KEY_K | END_CONSONANT_MASK`), cut in D10, and the spelling check compares the plain key, so "ăk" was never a valid ending (teencode's k after i / ư, D53, didn't cover it).
-
-**Decision.** A k right after ă ends a syllable: no tone, sắc or nặng (Đăk, Đắk, đặk), like the stop endings -c and -t; huyền, hỏi and ngã stay invalid ("dawkf" goes back to its keys). Only after ă: "ak" and "âk" keep their marks when spelling check is off ("baakf" → "bầk", as before). The tone works typed before or after the k. A w after "ăk" stays a letter, so it doesn't take the breve off ("awkward", "hawkweed").
-
-**Word data.** "Đắk", "Lắk", "Đăk" are almost absent from the subtitle and chat counts, and the syllable filter in `build_dict.py` dropped every k ending, so from English mode "Ddawsk Lawsk" stayed English and all-caps "ĐẮK LẮK" was taken for an acronym (D23). The filter now keeps ăk, and these three get a floor score (16, ~40 per million; Đăk 10) unless the data has them; the three entries were added to `AutoSwitchData.h` without regenerating the rest. Measured against the same engine without the three entries: goldens, metrics and realistic typing unchanged; the 256,875 English words below typed lowercase and in all caps, in both modes: 0 changes; the suggestion strip changes only for the prefixes "law" (lắk 4th) and "ddaw" (đắk 5th).
-
-**Scope.** Only ăk: the breve is typed on purpose (aw), so English rarely hits it. Plain "ak", "uk", "ok" would catch English words (look, dusk, husk, yaks), so Krông Búk and Yók Đôn stay out for now.
-
-**Measured.** Goldens, Telex lock, metrics and realistic typing unchanged. 256,875 English words (/usr/share/dict/words, en_50k, en_spell_ok) typed in both modes: English mode unchanged; Vietnamese mode changed 7 rare words that are themselves "Căk" (bawk, cawk, chawk, lawk, mawk, pawk, quawk → băk…). In all caps nothing changes. Known: "gawks" (not in the English list) becomes "gắk" in Vietnamese mode. Spelling check off: 178,640 key sequences change only where ă is followed by k.
-## 55. "vừa" + a keeps the horn
-
-**Status:** In the engine 2026-10-31. Rules D55 (9 cases).
-
-**Problem.** A doubled a/o/e after ư took the horn off the ư inside the engine but left ư on the screen. "vuwfaa" gave "vuầ" (the horn went with the next redraw, the tone jumped onto the new â: the word "vừa" was gone); "chuwaa" left "chưâ" on screen while the engine held "chuâ", so the end-of-word spelling check passed a word that isn't Vietnamese. Same split for "thuwoo" (screen "thưô", engine "thuô"), "muwoon", "luwee".
-
-**Fix.**
-- "ưa" + a: the a is a plain letter ("chưaa"). "ưa" is a whole rime and no rime has ư before â, so the end of the word decides like any other invalid word: keys back ("chuwaa", D10/D8). "ua" + a still gives uâ (luân, tuần, quân).
-- "ưo"/"ươ" + o and "ưe" + e still give uô / uê (Telex: the last mark wins, and w turns uô back into ươ, so a doubled o inside "thường" still works). The ư that became u is now redrawn, so the screen shows what the engine holds.
-
-**Measured.** Golden snapshots, Telex lock, metrics, realistic typing and fat-finger: unchanged. Typing every rime of the vowel tables after every onset with an extra a/o/e/w/aa/oo/ee/ww, final and tone (2.0M words): 19,885 change, all with a ư/ơ/ă before the doubled key. 10,346 "ưa" + a words now go back to their keys (were "ưâ", "uầ"...); 9,344 now show the u (or a) the engine holds instead of a stale ư (or ă) (160 of them become real syllables: uông, uôi, uên). Trade-off: 195 words typed "ưa" + a + final ("chuwaanr", "uawayf") used to become uâ words (chuẩn, uầy); their keys now go back.
-
-**Not changed (taste, for Tony).** "cuaa" stays "cuâ": the spelling check accepts an open uâ like an open â ("baa" → "bâ") and doesn't check c/k/q before a rime ("cuân", "ká"); tightening that is a separate rule. Mid-word the tone of "vừa" + a moves to the plain a ("vưaà") like with any third vowel ("vừa" + e → "vưaè").
-## 56. Latin keyboard layouts keep Telex (Mac)
-
-**Status:** Proposed 2026-10-31. Needs Tony's call (see trade-off).
-
-**Problem.** Vikey stepped aside for every input source whose first language isn't `en`. French AZERTY, German QWERTZ, Spanish, Polish, Turkish... (105 of the 312 keyboard sources on macOS 27) lost Vietnamese, although the key mapping for non-QWERTY layouts already handles them. Mac has no setting for this (`vOtherLanguage` is fixed at 1).
-
-**Decided.** Keyboard layouts: Vikey steps aside only for layouts that can't type Latin letters (`kTISPropertyInputSourceIsASCIICapable`: Russian, Greek, Arabic, Hebrew, Thai...) and for Vietnamese layouts. Input methods (Japanese, Chinese, Korean...) keep the old rule. Still checked once per input-source change (decision 10).
-
-**Trade-off.** Someone who switches to the French or German layout to write French or German now gets Telex there too (`je suis` → `je súi`); they switch Vikey to English as on ABC. Keeping the old behavior for them would need a setting.
-
-**Verified** on macOS 27 with the app typing through the event tap: French, German, British give `tiếng`; Russian gives `ешуутпы` (Vikey stays out, once an input-source change applies at once). All 312 sources: 105 go from off to Telex, all Latin layouts; none from Telex to off.
 
 ## 53. Teencode spelling (engine, off by default)
 
