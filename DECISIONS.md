@@ -112,6 +112,17 @@ If every listed change is intended, accept them with `Tools/autoswitch/check.sh 
 **Measured.** Golden snapshots, Telex lock, metrics, realistic typing and fat-finger: unchanged. Typing every rime of the vowel tables after every onset with an extra a/o/e/w/aa/oo/ee/ww, final and tone (2.0M words): 19,885 change, all with a ư/ơ/ă before the doubled key. 10,346 "ưa" + a words now go back to their keys (were "ưâ", "uầ"...); 9,344 now show the u (or a) the engine holds instead of a stale ư (or ă) (160 of them become real syllables: uông, uôi, uên). Trade-off: 195 words typed "ưa" + a + final ("chuwaanr", "uawayf") used to become uâ words (chuẩn, uầy); their keys now go back.
 
 **Not changed (taste, for Tony).** "cuaa" stays "cuâ": the spelling check accepts an open uâ like an open â ("baa" → "bâ") and doesn't check c/k/q before a rime ("cuân", "ká"); tightening that is a separate rule. Mid-word the tone of "vừa" + a moves to the plain a ("vưaà") like with any third vowel ("vừa" + e → "vưaè").
+## 56. Latin keyboard layouts keep Telex (Mac)
+
+**Status:** Proposed 2026-10-31. Needs Tony's call (see trade-off).
+
+**Problem.** Vikey stepped aside for every input source whose first language isn't `en`. French AZERTY, German QWERTZ, Spanish, Polish, Turkish... (105 of the 312 keyboard sources on macOS 27) lost Vietnamese, although the key mapping for non-QWERTY layouts already handles them. Mac has no setting for this (`vOtherLanguage` is fixed at 1).
+
+**Decided.** Keyboard layouts: Vikey steps aside only for layouts that can't type Latin letters (`kTISPropertyInputSourceIsASCIICapable`: Russian, Greek, Arabic, Hebrew, Thai...) and for Vietnamese layouts. Input methods (Japanese, Chinese, Korean...) keep the old rule. Still checked once per input-source change (decision 10).
+
+**Trade-off.** Someone who switches to the French or German layout to write French or German now gets Telex there too (`je suis` → `je súi`); they switch Vikey to English as on ABC. Keeping the old behavior for them would need a setting.
+
+**Verified** on macOS 27 with the app typing through the event tap: French, German, British give `tiếng`; Russian gives `ешуутпы` (Vikey stays out, once an input-source change applies at once). All 312 sources: 105 go from off to Telex, all Latin layouts; none from Telex to off.
 
 ## 53. Teencode spelling (engine, off by default)
 
