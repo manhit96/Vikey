@@ -5,6 +5,20 @@ Each entry records what was asked, what was decided, and its status. Newest firs
 
 Status values: **Shipped** (in a build Tony has), **Agreed** (decided, not built yet), **Rejected**.
 
+## 61. "ăk" is a Vietnamese ending (Đắk Lắk)
+
+**Status:** In the engine 2026-10-31. Rules D61 (11 cases).
+
+**Problem.** Official province and district names of Tây Nguyên end in -k: Đắk Lắk, Đắk Nông, Đăk Tô, Đắk Glong, Đắk Mil. They couldn't be typed with the default settings: "Ddawsk Lawsk" ended as "Ddawsk Lawsk", "Ddawks Lawks" as its keys, "Ddawk Too" as "Ddawk Tô", and a tone typed after the k was never placed ("dawks" showed "dăks"), even in plain Telex. The only final k the engine had was OpenKey's quick end consonant k → ch (`KEY_K | END_CONSONANT_MASK`), cut in D10, and the spelling check compares the plain key, so "ăk" was never a valid ending (teencode's k after i / ư, D53, didn't cover it).
+
+**Decision.** A k right after ă ends a syllable: no tone, sắc or nặng (Đăk, Đắk, đặk), like the stop endings -c and -t; huyền, hỏi and ngã stay invalid ("dawkf" goes back to its keys). Only after ă: "ak" and "âk" keep their marks when spelling check is off ("baakf" → "bầk", as before). The tone works typed before or after the k. A w after "ăk" stays a letter, so it doesn't take the breve off ("awkward", "hawkweed").
+
+**Word data.** "Đắk", "Lắk", "Đăk" are almost absent from the subtitle and chat counts, and the syllable filter in `build_dict.py` dropped every k ending, so from English mode "Ddawsk Lawsk" stayed English and all-caps "ĐẮK LẮK" was taken for an acronym (D23). The filter now keeps ăk, and these three get a floor score (16, ~40 per million; Đăk 10) unless the data has them; the three entries were added to `AutoSwitchData.h` without regenerating the rest. Measured against the same engine without the three entries: goldens, metrics and realistic typing unchanged; the 256,875 English words below typed lowercase and in all caps, in both modes: 0 changes; the suggestion strip changes only for the prefixes "law" (lắk 4th) and "ddaw" (đắk 5th).
+
+**Scope.** Only ăk: the breve is typed on purpose (aw), so English rarely hits it. Plain "ak", "uk", "ok" would catch English words (look, dusk, husk, yaks), so Krông Búk and Yók Đôn stay out for now.
+
+**Measured.** Goldens, Telex lock, metrics and realistic typing unchanged. 256,875 English words (/usr/share/dict/words, en_50k, en_spell_ok) typed in both modes: English mode unchanged; Vietnamese mode changed 7 rare words that are themselves "Căk" (bawk, cawk, chawk, lawk, mawk, pawk, quawk → băk…). In all caps nothing changes. Known: "gawks" (not in the English list) becomes "gắk" in Vietnamese mode. Spelling check off: 178,640 key sequences change only where ă is followed by k.
+
 ## 60. English word forms the list is missing: "resets" stays "resets"
 
 **Status:** Built 2026-11-08, not in a release yet (Tony's report).

@@ -220,3 +220,14 @@ D60	1	chi phis 	chi phí 	1	never when the letters are a Vietnamese word: phis (
 D60	0	chi phis 	chi phí 	1	same in EN mode
 D60	1	thans 	thán 	1	a guessed form that isn't a real English word stays Vietnamese
 D60	0	crypto nos volatile 	crypto nó volatile 	1	words already in the frequency list keep their own score: D22's nos -> nó stays
+D61	1	tinhr Ddawsk Lawsk 	tỉnh Đắk Lắk 	1	ăk: the k coda of Tây Nguyên place names, tone before k
+D61	1	Ddawks Lawks 	Đắk Lắk 	1	ăk: tone typed after k
+D61	1	Ddawk Too 	Đăk Tô 	1	ăk without a tone (Đăk Tô)
+D61	0	Ddawsk Lawsk 	Đắk Lắk 	1	ăk place names are in the word data: from English mode they switch to Vietnamese
+D61	1	DDAWSK LAWSK 	ĐẮK LẮK 	1	ăk place names are common enough that all caps stays Vietnamese (D23)
+D61	1	Ddawsk Noong 	Đắk Nông 	1	ăk then a common word
+D61	1	dawkj 	dặk 	1	ăk takes nặng, like ặc
+D61	1	dawkf 	dawkf 	1	no huyền, hỏi, ngã on a stop coda (like -c, -t): put back to its keys
+D61	1	hawks 	hawks 	0	an English word with "awk" stays English
+D61	1	awkward 	awkward 	0	a w after ăk stays a letter (no "akward")
+D61	1	hawkweed 	hawkweed 	0	a w after ăk stays a letter, also for words not in the English list
