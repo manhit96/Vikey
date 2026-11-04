@@ -816,11 +816,11 @@ extern "C" {
         if (!excluded) excluded = [NSSet setWithArray:@[
             // password managers
             @"com.1password.1password", @"com.agilebits.onepassword7", @"com.bitwarden.desktop", @"com.apple.Passwords",
-            @"com.apple.keychainaccess", @"com.lastpass.LastPass", @"com.dashlane.dashlanephonefinal", @"in.sinew.Enpass-Desktop",
-            @"com.keepassxc.keepassxc", @"com.sinew.Enpass-Desktop", @"com.nordpass.macos.NordPass",
+            @"com.apple.keychainaccess", @"com.lastpass.lastpassmacdesktop", @"com.dashlane.dashlanephonefinal", @"in.sinew.Enpass-Desktop",
+            @"org.keepassxc.keepassxc", @"com.sinew.Enpass-Desktop", @"com.nordsec.nordpass",
             // terminals (sudo and ssh passwords are typed in plain view of the event tap)
             @"com.apple.Terminal", @"com.googlecode.iterm2", @"dev.warp.Warp-Stable", @"com.mitchellh.ghostty",
-            @"io.alacritty", @"net.kovidgoyal.kitty", @"com.github.wez.wezterm", @"co.zeit.hyper", @"com.termius-dmg.mac"]];
+            @"org.alacritty", @"net.kovidgoyal.kitty", @"com.github.wez.wezterm", @"co.zeit.hyper", @"com.termius-dmg.mac"]];
         return vTypingLogKeys && !IsSecureEventInputEnabled() && ![excluded containsObject:_tlApp];
     }
 
