@@ -565,6 +565,13 @@ void checkCorrectVowel(vector<vector<Uint16>>& charset, int& i, int& k, const Ui
             isCorect = false;
         }
     }
+    
+    //"ưa" + a ("vừa" + a, "chưa" + a): ưa is a whole rime, and â after it would take the horn off the ư
+    //("vuầ", "chuâ": the word typed is gone). The key stays a plain letter; the end of the word decides (D62).
+    //ư + oo / ee still turns into uô / uê: ươ and uô swap with w and o ("thuwoowngf" -> "thường").
+    if (isCorect && k >= 0 && markKey == KEY_A && CHR(k) == KEY_U && (TypingWord[k] & TONEW_MASK)) {
+        isCorect = false;
+    }
 }
 
 Uint32 getCharacterCode(const Uint32& data) {
@@ -907,7 +914,9 @@ void insertAOE(const Uint16& data, const bool& isCaps) {
     findAndCalculateVowel();
     
     //remove W tone
+    int hornGone = -1;   //the first letter that lost its horn: redrawn too, even before the one that gets ^ (D62)
     for (ii = VSI; ii <= VEI; ii++) {
+        if ((TypingWord[ii] & TONEW_MASK) && hornGone < 0) hornGone = ii;
         TypingWord[ii] &= ~TONEW_MASK;
     }
     
@@ -937,6 +946,12 @@ void insertAOE(const Uint16& data, const bool& isCaps) {
         } else { //preresent old char
             hData[_index - 1 - ii] = GET(TypingWord[ii]);
         }
+    }
+    //"ươ" / "ưo" + o -> "uô", "ưe" + e -> "uê": the ư before the new ô/ê is a u now; the screen kept showing ư
+    //("thuwoo" gave "thưô", "muwoon" "mưôn")
+    for (int x = ii - 1; hornGone >= 0 && x >= hornGone; x--) {
+        hData[_index - 1 - x] = GET(TypingWord[x]);
+        hBPC++;
     }
     hNCC = hBPC;
 }
