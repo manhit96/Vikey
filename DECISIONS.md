@@ -5,6 +5,18 @@ Each entry records what was asked, what was decided, and its status. Newest firs
 
 Status values: **Shipped** (in a build Tony has), **Agreed** (decided, not built yet), **Rejected**.
 
+## 63. Latin keyboard layouts keep Telex (Mac)
+
+**Status:** Proposed 2026-10-31. Needs Tony's call (see trade-off).
+
+**Problem.** Vikey stepped aside for every input source whose first language isn't `en`. French AZERTY, German QWERTZ, Spanish, Polish, Turkish... (105 of the 312 keyboard sources on macOS 27) lost Vietnamese, although the key mapping for non-QWERTY layouts already handles them. Mac has no setting for this (`vOtherLanguage` is fixed at 1).
+
+**Decided.** Keyboard layouts: Vikey steps aside only for layouts that can't type Latin letters (`kTISPropertyInputSourceIsASCIICapable`: Russian, Greek, Arabic, Hebrew, Thai...) and for Vietnamese layouts. Input methods (Japanese, Chinese, Korean...) keep the old rule. Still checked once per input-source change (decision 10).
+
+**Trade-off.** Someone who switches to the French or German layout to write French or German now gets Telex there too (`je suis` → `je súi`); they switch Vikey to English as on ABC. Keeping the old behavior for them would need a setting.
+
+**Verified** on macOS 27 with the app typing through the event tap: French, German, British give `tiếng`; Russian gives `ешуутпы` (Vikey stays out, once an input-source change applies at once). All 312 sources: 105 go from off to Telex, all Latin layouts; none from Telex to off.
+
 ## 60. English word forms the list is missing: "resets" stays "resets"
 
 **Status:** Built 2026-11-08, not in a release yet (Tony's report).
