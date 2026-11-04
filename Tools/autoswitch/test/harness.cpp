@@ -135,6 +135,8 @@ int main(int argc, char** argv) {
     if (getenv("VIKEY_TELEX_STYLE")) vTelexStyle = atoi(getenv("VIKEY_TELEX_STYLE"));   // D56: 1 / 2 = Simple Telex 1 / 2
     H = (vKeyHookState*)vKeyInit();
     if (getenv("VIKEY_AUTO_OFF")) { vAutoSwitchByTyping = 0; vRestoreIfWrongSpelling = 0; }   // a plain Telex input method, for comparison
+    if (getenv("VIKEY_SPELL")) { vCheckSpelling = atoi(getenv("VIKEY_SPELL")); vSetCheckSpelling(); }   // rules.tsv settings column (spell=0)
+    if (getenv("VIKEY_MODERN")) vUseModernOrthography = atoi(getenv("VIKEY_MODERN"));                   // modern=0: classic tone placement
     if (argc >= 2 && strcmp(argv[1], "lines") == 0) {
         // stdin: "<lang>\t<keys>" per line -> prints "<final text>\t<switches>\t<final lang>"
         char buf[4096];

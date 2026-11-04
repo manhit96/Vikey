@@ -606,10 +606,13 @@ Uint32 getCharacterCode(const Uint32& data) {
         } else if (data & TONEW_MASK) {
             key |= TONEW_MASK;
         }
-        if (_unicodeTable.find(key) == _unicodeTable.end())
+        auto row = _unicodeTable.find(key);
+        if (row == _unicodeTable.end())
             return data & ~STANDALONE_MASK; //not found (a standalone w that lost its ư is just u, never a raw flagged code)
-        
-        return _unicodeTable[key][markElem] | CHAR_CODE_MASK;
+        if (markElem < 0 || markElem >= (int)row->second.size())
+            return data & ~(STANDALONE_MASK | MARK_MASK); //no such marked letter (the d row only has Đ đ): the letter without the mark
+
+        return row->second[markElem] | CHAR_CODE_MASK;
     } else { //doesn't has mark
         if (_unicodeTable.find(key) == _unicodeTable.end())
             return data & ~STANDALONE_MASK; //not found (a standalone w that lost its ư is just u, never a raw flagged code)
@@ -728,8 +731,8 @@ void handleModernMark() {
     }
     
     //rule 3.1
-    if ((CHR(VSI) == KEY_I && (TypingWord[VSI+1] & (KEY_E | TONE_MASK))) ||
-        (CHR(VSI) == KEY_Y && (TypingWord[VSI+1] & (KEY_E | TONE_MASK))) ||
+    if ((CHR(VSI) == KEY_I && CHR(VSI+1) == KEY_E) ||
+        (CHR(VSI) == KEY_Y && CHR(VSI+1) == KEY_E) ||
         (CHR(VSI) == KEY_U && (TypingWord[VSI+1] == (KEY_O | TONE_MASK))) ||
         ((TypingWord[VSI] == (KEY_U | TONEW_MASK)) && (TypingWord[VSI+1] == (KEY_O | TONEW_MASK)))){
         
@@ -795,10 +798,7 @@ void handleModernMark() {
 
 void handleOldMark() {
     //default
-    if (vowelCount == 0 && CHR(VEI) == KEY_I)
-        VWSM = VEI;
-    else
-        VWSM = VSI;
+    VWSM = VSI;
     hBPC = (_index - VWSM);
     
     //rule 2
@@ -830,7 +830,7 @@ void insertMark(const Uint32& markMask, const bool& canModifyFlag) {
     VWSM = 0;
     
     //detect mark position
-    if (vowelCount == 1) {
+    if (vowelCount <= 1) { //0: the only vowel is the i of "gi" or the u of "qu", at VEI (VSI isn't a vowel then)
         VWSM = VEI;
         hBPC = (_index - VEI);
     } else { //vowel = 2 or 3
