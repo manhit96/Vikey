@@ -416,10 +416,12 @@ extern "C" {
         NSData* data = [[NSUserDefaults standardUserDefaults] objectForKey:@"smartSwitchKey"];
         initSmartSwitchKey((Byte*)data.bytes, (int)data.length);
 
-        // keyboard layout changes (QWERTY <-> Dvorak) switch the key mapping automatically
-        [[NSDistributedNotificationCenter defaultCenter] addObserverForName:(__bridge NSString*)kTISNotifySelectedKeyboardInputSourceChanged
-                                                                     object:nil queue:[NSOperationQueue mainQueue]
-                                                                 usingBlock:^(NSNotification* n) { VKUpdateLayoutCompat(); }];
+        // keyboard layout changes (QWERTY <-> Dvorak) switch the key mapping automatically.
+        // Delivered immediately: Vikey is never the active app, and a background app's distributed notifications
+        // otherwise wait for the next one, so the key mapping lagged one input-source change behind.
+        CFNotificationCenterAddObserver(CFNotificationCenterGetDistributedCenter(), NULL,
+                                        [](CFNotificationCenterRef, void*, CFNotificationName, const void*, CFDictionaryRef) { VKUpdateLayoutCompat(); },
+                                        kTISNotifySelectedKeyboardInputSourceChanged, NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
     }
     
     /// Another app came to the front: forget the word in progress and the look-back history.
