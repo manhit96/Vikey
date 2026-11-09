@@ -471,7 +471,9 @@ extern "C" {
         NSInteger statusLevel = CGWindowLevelForKey(kCGStatusWindowLevelKey);
         for (NSDictionary *window in windows) {
             if ([[window objectForKey:(__bridge NSString *)kCGWindowLayer] integerValue] == statusLevel) continue;
-            if ([[window objectForKey:(__bridge NSString *)kCGWindowOwnerName] isEqualToString:@"Spotlight"]) {
+            NSString *owner = [window objectForKey:(__bridge NSString *)kCGWindowOwnerName];
+            // macOS 27 shows the Spotlight panel from the Siri process
+            if ([owner isEqualToString:@"Spotlight"] || [owner isEqualToString:@"Siri"]) {
                 return true;
             }
         }
