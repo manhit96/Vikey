@@ -290,9 +290,15 @@ extern "C" {
         TISInputSourceRef isource = TISCopyCurrentKeyboardInputSource();
         if (isource) {
             CFArrayRef languages = (CFArrayRef)TISGetInputSourceProperty(isource, kTISPropertyInputSourceLanguages);
-            if (languages && CFArrayGetCount(languages) > 0) {
-                NSString* lang = (__bridge NSString*)(CFStringRef)CFArrayGetValueAtIndex(languages, 0);
-                _otherInputLanguage = ![lang isLike:@"en"];
+            NSString* lang = languages && CFArrayGetCount(languages) > 0 ? (__bridge NSString*)(CFStringRef)CFArrayGetValueAtIndex(languages, 0) : nil;
+            CFStringRef type = (CFStringRef)TISGetInputSourceProperty(isource, kTISPropertyInputSourceType);
+            if (type && CFEqual(type, kTISTypeKeyboardLayout)) {
+                // any layout that types Latin letters works (French AZERTY, German QWERTZ...: keys are mapped back above);
+                // Russian, Greek, Arabic... can't type Telex, and the Vietnamese layout types Vietnamese itself
+                CFBooleanRef ascii = (CFBooleanRef)TISGetInputSourceProperty(isource, kTISPropertyInputSourceIsASCIICapable);
+                _otherInputLanguage = !(ascii && CFBooleanGetValue(ascii)) || [lang hasPrefix:@"vi"];
+            } else if (lang) {
+                _otherInputLanguage = ![lang isLike:@"en"];   // input methods (Japanese, Chinese...) unless typing English
             }
             CFRelease(isource);
         }
