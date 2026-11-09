@@ -231,3 +231,12 @@ D61	1	dawkf 	dawkf 	1	no huyền, hỏi, ngã on a stop coda (like -c, -t): put 
 D61	1	hawks 	hawks 	0	an English word with "awk" stays English
 D61	1	awkward 	awkward 	0	a w after ăk stays a letter (no "akward")
 D61	1	hawkweed 	hawkweed 	0	a w after ăk stays a letter, also for words not in the English list
+D62	1	chuwaa	chưaa	1	"ưa" + a: the horn stays and the a is a plain letter (gave "chưâ", with a u inside the engine)
+D62	1	chuwaa 	chuwaa 	0	at the end of the word "ưaa" is invalid: keys back, like any other invalid word (gave "chưâ")
+D62	1	vuwfaa 	vuwfaa 	0	"vừa" + a never loses the horn or moves the tone onto an â (gave "vuầ")
+D62	1	vuwfa 	vừa 	1	"vừa" itself is unchanged
+D62	1	luaan tuaanf quaan 	luân tuần quân 	1	"ua" + a still gives uâ
+D62	1	thuwoo	thuô	1	"ưo" + o gives uô and the screen shows the u (gave "thưô")
+D62	1	muwoon	muôn	1	the same before a final consonant (gave "mưôn")
+D62	1	luwee	luê	1	"ưe" + e gives uê (gave "lưê")
+D62	1	thuwoowngf 	thường 	1	ươ and uô still swap with w and o (a doubled o inside "thường")
